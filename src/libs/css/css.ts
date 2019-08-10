@@ -13,6 +13,9 @@ export const watchCss = async () => {
   const config = getConfig();
   const configDir = getFileDirectory(args.configuration);
   const cssPath = path.resolve(configDir, config.client.css.spec.entry);
+  fs.mkdirSync(path.join(configDir, config.client.css.spec.output), {
+    recursive: true
+  });
   const outPath = path.resolve(
     configDir,
     config.client.css.spec.output,
