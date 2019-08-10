@@ -1,0 +1,25 @@
+version: 1
+meta:
+  name: hello_world
+server:
+  port: 3002
+  spec:
+    static: dist
+    paths:
+    - path: /hello
+      method: GET
+      script: src/helloWorld.<%= extension %>
+client:
+    css:
+      spec:
+        output: dist
+        filename: main.css
+        entry: src/public/main.css
+    js:
+      spec:
+        output: dist
+        filename: bundle.js
+        entry: src/public/main.<%= extension %>x
+    html:
+      spec:
+        template: src/public/index.html
