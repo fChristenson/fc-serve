@@ -8,6 +8,10 @@ export const initProject = () => {
 };
 
 export const createFiles = () => {
+  const gitIgnore = fs.readFileSync(
+    path.join(__dirname, "gitignore.txt"),
+    "utf8"
+  );
   const extension = args.js ? "js" : "ts";
   const configTemplate = fs.readFileSync(
     path.join(__dirname, "config.yaml.template"),
@@ -25,6 +29,7 @@ export const createFiles = () => {
   );
   const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
 
+  fs.writeFileSync(path.join(process.cwd(), ".gitignore"), gitIgnore);
   fs.writeFileSync(path.join(process.cwd(), "config.yaml"), config);
   fs.mkdirSync(path.join(process.cwd(), "src", "public"), { recursive: true });
   fs.writeFileSync(

@@ -10,7 +10,10 @@ import { loadFunctions } from "./src/libs/functionLoader/functionLoader";
 import { initProject } from "./src/libs/init/init";
 import { watchCss, cssPostBuild } from "./src/libs/css/css";
 import { watchTs, webpackProdBuild } from "./src/libs/bundler/bundler";
-import { copyPackageJson } from "./src/libs/packages/packages";
+import {
+  initPackageJson,
+  updatePackageJson
+} from "./src/libs/packages/packages";
 import { buildImage } from "./src/libs/container/image";
 
 const runProdSteps = () => {
@@ -29,7 +32,9 @@ const runProdSteps = () => {
     watchCss();
   } else if (args.init) {
     initProject();
-    copyPackageJson();
+    initPackageJson();
+  } else if (args.update) {
+    updatePackageJson();
   } else if (args.build) {
     buildImage();
   } else {

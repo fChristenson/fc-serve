@@ -26,4 +26,5 @@ export const args = commander
   .option("-i, --init", "Initialize a project")
   .option("-v, --verbose", "Enabled verbose logging")
   .option("-b, --build", "Build Docker image")
+  .option("-u, --update", "Update packages")
   .parse(process.argv);
