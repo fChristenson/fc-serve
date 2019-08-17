@@ -9,6 +9,7 @@ export const loadFunctions = (): ILoadedFunction[] => {
   const config = getConfig();
   return config.server.spec.paths.map((p: any) => {
     const scriptPath = path.resolve(configDir, p.script);
+    delete require.cache[scriptPath];
     return {
       pathData: p,
       functions: [].concat(require(scriptPath)).map(errorHandler)

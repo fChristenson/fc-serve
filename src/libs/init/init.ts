@@ -32,8 +32,9 @@ export const createFiles = () => {
   fs.writeFileSync(path.join(process.cwd(), ".gitignore"), gitIgnore);
   fs.writeFileSync(path.join(process.cwd(), "config.yaml"), config);
   fs.mkdirSync(path.join(process.cwd(), "src", "public"), { recursive: true });
+  fs.mkdirSync(path.join(process.cwd(), "src", "routes"), { recursive: true });
   fs.writeFileSync(
-    path.join(process.cwd(), `src/helloWorld.${extension}`),
+    path.join(process.cwd(), `src/routes/helloWorld.${extension}`),
     serverScript
   );
   fs.writeFileSync(path.join(process.cwd(), "src/public/main.css"), css);

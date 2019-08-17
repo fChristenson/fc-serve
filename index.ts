@@ -2,10 +2,9 @@
 const ts = require("ts-node");
 ts.register();
 
-import { initApp, buildProdApp } from "./src/libs/app/app";
+import { buildProdApp, watchApp } from "./src/libs/app/app";
 import { args } from "./src/libs/args/args";
-import { getConfig, copyConfig } from "./src/libs/config/config";
-import { loadFunctions } from "./src/libs/functionLoader/functionLoader";
+import { copyConfig } from "./src/libs/config/config";
 //import { buildImage } from "./src/libs/container/image";
 import { initProject } from "./src/libs/init/init";
 import { watchCss, cssPostBuild } from "./src/libs/css/css";
@@ -38,14 +37,7 @@ const runProdSteps = () => {
   } else if (args.build) {
     buildImage();
   } else {
-    const config = getConfig();
-    const functions = loadFunctions();
-    const app = initApp(functions);
-
-    app.listen(config.server.port, () => {
-      console.log("Running on port ", config.server.port);
-      console.log("--------------------------");
-    });
+    watchApp();
   }
 
   process.on("uncaughtException", e => {

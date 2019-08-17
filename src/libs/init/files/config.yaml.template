@@ -8,7 +8,7 @@ server:
     paths:
     - path: /hello
       method: GET
-      script: src/helloWorld.<%= extension %>
+      script: src/routes/helloWorld.<%= extension %>
 client:
     css:
       spec:

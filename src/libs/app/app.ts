@@ -1,10 +1,13 @@
-import express, { Application, Response, Request, NextFunction } from "express";
+import express, { Response, Request, NextFunction } from "express";
 import { ILoadedFunction } from "../functionLoader/LoadedFunction";
 import { debug } from "../logging/logging";
 import { getFileDirectory, getConfig } from "../config/config";
 import { args } from "../args/args";
 import fs from "fs";
 import path from "path";
+import { Server } from "http";
+import chokidar from "chokidar";
+import { loadFunctions } from "../functionLoader/functionLoader";
 
 export const buildProdApp = (): ILoadedFunction[] => {
   const configDir = getFileDirectory(args.configuration);
@@ -20,7 +23,30 @@ export const buildProdApp = (): ILoadedFunction[] => {
   });
 };
 
-export const initApp = (functions: ILoadedFunction[]): Application => {
+export const watchApp = () => {
+  const configDir = getFileDirectory(args.configuration);
+  const routesPath = path.resolve(configDir, configDir, "src", "routes");
+  const watcher = chokidar.watch(routesPath, {
+    awaitWriteFinish: {
+      stabilityThreshold: 50,
+      pollInterval: 10
+    }
+  });
+
+  let app = initApp();
+
+  watcher
+    .on("ready", () => console.log(`Watching ${routesPath}`))
+    .on("change", () => {
+      app.close(err => {
+        if (err) throw err;
+        app = initApp();
+      });
+    });
+};
+
+export const initApp = (): Server => {
+  const functions = loadFunctions();
   const app = express();
   const config = getConfig();
 
@@ -54,5 +80,11 @@ export const initApp = (functions: ILoadedFunction[]): Application => {
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
     res.status(500).json({ error: error.message });
   });
-  return app;
+
+  return app
+    .listen(config.server.port, () => {
+      console.log("Running on port ", config.server.port);
+      console.log("--------------------------");
+    })
+    .on("close", () => console.log("Shutting down server"));
 };
